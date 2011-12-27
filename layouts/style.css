@@ -1,0 +1,183 @@
+  /**
+ * New Lodge It Style
+ */
+
+body {
+    background: #DBE6E9;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+#page {
+    margin: 20px;
+    padding: 10px;
+    background: white repeat-x;
+    border: 1px solid #A9B6B9;
+}
+
+div.footer {
+    clear: both;
+}
+
+h1 {
+    font-size: 30px;
+    font-family: 'Trebuchet MS', sans-serif;
+    margin: 0;
+    color: #083944;
+}
+
+h2 {
+    font-size: 20px;
+    font-family: 'Trebuchet MS', sans-serif;
+    margin: 0px 0 10px 20px;
+    color: #e18f00;
+}
+
+h3 {
+    font-size: 20px;
+    margin: 20px 0 0 0;
+    color: #557F8A;
+}
+
+h2 a {
+    text-decoration: none;
+}
+
+a {
+    color: #557F8A;
+}
+
+a:hover {
+    color: #e18f00;
+}
+
+form p {
+    margin-top: 0px;
+}
+
+div.text {
+    max-width: 700px;
+    text-align: justify;
+    padding: 0 10px 0 10px;
+}
+
+#navigation {
+    float: right;
+    list-style: none;
+    margin: -50px 0 0 0;
+    padding: 0;
+}
+
+#navigation li {
+    float: left;
+}
+
+#navigation li a {
+    display: block;
+    padding: 5px 10px 5px 10px;
+    background-color: #A7BEC4;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#navigation li a:hover {
+    background-color: #f89e00;
+}
+
+#navigation li.active a {
+    background-color: #557F8A;
+}
+
+#languages {
+    float: right;
+    list-style: none;
+    margin: -10px 0 0 0;
+    padding: 0;
+}
+
+#languages li {
+    float: left;
+    margin-right: 5px;
+}
+
+#languages li img {
+    border: none;
+    padding: 2px;
+}
+
+#languages li.active img {
+    border: 1px solid #A7BEC4;
+    padding: 1px;
+}
+
+#paste {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #A7BEC4;
+}
+
+#paste div.code {
+    overflow: auto;
+}
+
+#paste table, #paste tbody {
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#paste td.code {
+    padding-left: 10px;
+}
+
+#paste td.linenos {
+    background-color: #A7BEC4;
+    padding-right: 5px;
+    padding-left: 20px;
+    text-align: right;
+    color: #fff;
+}
+
+#paste.nolinenos td.linenos {
+    display: none;
+}
+
+#paste pre {
+    margin: 0;
+    padding: 5px 0 5px 0;
+    font-family: 'Bitstream Vera Sans Mono', monospace;
+    font-size: 13px;
+}
+
+input, select, textarea {
+    border: 1px solid #CBD8DB;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: black;
+    background-color: #FDFDFD;
+}
+
+textarea {
+    font-family: 'Bitstream Vera Sans Mono', monospace;
+    font-size: 13px;
+    width: 100%;
+    height: 300px;
+}
+
+input[type="submit"],
+input[type="button"] {
+    background-color: #557F8A;
+    color: white;
+    cursor: pointer;
+    padding: 2px;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: #8DA6AC;
+}

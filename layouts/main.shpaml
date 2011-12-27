@@ -1,0 +1,25 @@
+head
+    title | Pastebin – posativ.org
+    > meta http-equiv=content-type content=text/html; charset=utf-8
+    > link rel=stylesheet href=layouts/style.css type=text/css
+body
+    #page
+        #header
+            h1 | Paste it
+        #content
+            h2 | New Paste
+        form action=index.py method=post enctype=multipart/form-data
+        
+            p
+                <textarea name="code" rows="10" cols="80"></textarea>
+            p
+            
+                label for=lang | Language:
+                select id=lang name=lang
+                    option value=guess | Automatically
+                    option value=text | None
+                    %(lang)s
+                
+                > input type=submit value=Paste!
+                > input type=checkbox name=linenos id=private
+                label for=linenos | show line numbers
