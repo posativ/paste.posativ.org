@@ -110,9 +110,10 @@ class Pastie(object):
     <head>
         <title>Pastebin – paste.posativ.org</title>
         <link rel="stylesheet" href="layouts/hilite.css">
+        <link rel="stylesheet" href="layouts/style.css">
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
     </head>
-    <body>
+    <body id="hilite">
         %s
     </body>
 </html>'''
