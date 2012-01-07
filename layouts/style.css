@@ -12,7 +12,7 @@ body {
 
 #hilite {
     background: #FFF;
-    margin: 0 auto;
+    padding-left: 16px;
     max-width: 1024px;
 }
 

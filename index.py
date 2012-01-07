@@ -174,6 +174,9 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
+application = make_app('pastes')
+
+
 def make_app(data_dir='.data/', prefix=None):
     application = Pastie(data_dir)
     application.wsgi_app = ReverseProxied(application.wsgi_app, prefix=prefix)
