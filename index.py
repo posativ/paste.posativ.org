@@ -130,8 +130,7 @@ class Pastie(object):
 
         p = join(self.data_dir, hash)
         if exists(p):
-            with open(p) as fp:
-                return Response(fp.read(), 200, content_type='text/html')
+            return Response(file(p), 201, content_type='text/html')
         else:
             return Response('Not Found', 404)
     
@@ -174,13 +173,13 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-application = make_app('pastes')
-
-
 def make_app(data_dir='.data/', prefix=None):
     application = Pastie(data_dir)
     application.wsgi_app = ReverseProxied(application.wsgi_app, prefix=prefix)
     return application
+
+
+application = make_app('pastes')
 
 
 if __name__ == '__main__':
