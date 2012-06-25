@@ -63,7 +63,7 @@ class Strip(HTMLParser):
 
 def create(app, request):
     """Create a new snippet: extract from fields (XXX linenos), render
-    ``snippet.html`` and save it to data_dir."""
+    ``layouts/show.html`` and save it to data_dir."""
 
     # filename = hashgen(length=8)
 
@@ -87,7 +87,7 @@ def create(app, request):
 
     with io.open(join(app.data_dir, pasteid), 'w') as fp:
 
-        fp.write(app.render_template('paste.html',
+        fp.write(app.render_template('layouts/show.html',
             lang=(None if lang == 'guess' else lang),
             hash=pasteid,
             linenos=(True if linenos == 'on' else False),
@@ -116,7 +116,7 @@ def show(app, request, pasteid):
 def index(app, request):
     """Return / -- basic stuff."""
 
-    return Response(app.render_template('main.html'), 200, content_type='text/html')
+    return Response(app.render_template('layouts/main.html'), 200, content_type='text/html')
 
 
 urlmap = Map([
