@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# Copyright 2012 posativ <info@posativ.org>. All rights reserved.
+# License: BSD revised
+#
+# A simple Pastebin using werkzeug and Jinja2. To delete pastes older than 30
+# days just set up a cron like ``find . -type f -mtime +30 -exec rm "{}" \;``.
 
-import sys
 import io
 
-from os import listdir, path, remove, stat, environ as env, makedirs
-from os.path import join, dirname, exists, getmtime
-from cgi import FieldStorage
-from time import time
+from os import makedirs, urandom
+from os.path import join, dirname, exists
 
-from xml.sax.saxutils import unescape
+from string import ascii_letters, digits
 from HTMLParser import HTMLParser
 
 from werkzeug.wrappers import Request, Response
-from werkzeug.routing import Map, Rule, BaseConverter
-from werkzeug.exceptions import HTTPException, NotFound, NotImplemented, InternalServerError
+from werkzeug.routing import Map, Rule
+from werkzeug.exceptions import HTTPException, NotFound, InternalServerError
 from werkzeug.wsgi import SharedDataMiddleware
 from werkzeug.useragents import UserAgent
 
@@ -22,10 +25,7 @@ from jinja2 import Environment, FileSystemLoader
 
 
 def hash(length):
-    '''generates a pseudo secure 8 chars long hash using /dev/random'''
-
-    from os import urandom
-    from string import ascii_letters, digits
+    """generates a pseudo secure 8 chars long hash using /dev/random"""
 
     h = []
     for char in urandom(32).encode('base64'):
@@ -37,6 +37,7 @@ def hash(length):
 
 
 class Strip(HTMLParser):
+    """Try to return the original code."""
 
     def __init__(self, html):
         HTMLParser.__init__(self)
@@ -67,31 +68,31 @@ class Strip(HTMLParser):
         self.code.append(self.unescape('&#' + char + ';'))
 
 
-
 def create(app, request):
+    """Create a new snippet: extract from fields (XXX linenos), render
+    ``snippet.html`` and save it to data_dir."""
 
-        app.clean()
+    filename = hash(length=8)
 
-        filename = hash(length=8)
+    text = request.form.get('code', request.files.get('file', '')).rstrip()
+    lang = request.form.get('lang', 'text')
+    linenos = request.form.get('linenos', False)
 
-        text = request.form.get('code', request.files.get('file', '')).rstrip()
-        lang = request.form.get('lang', 'text')
-        linenos = request.form.get('linenos', False)
+    with io.open(join(app.data_dir, filename), 'w') as fp:
 
-        with io.open(join(app.data_dir, filename), 'w') as fp:
+        fp.write(app.render_template('paste.html',
+            lang=(None if lang == 'guess' else lang),
+            hash=filename,
+            linenos=(True if linenos == 'on' else False),
+            paste=text)
+        )
 
-            fp.write(app.render_template('paste.html',
-                lang=(None if lang == 'guess' else lang),
-                hash=filename,
-                linenos=(True if linenos == 'on' else False),
-                paste=text)
-            )
-
-        return Response('Moved Temporarily', 301,
-                        headers={'Location': request.url_root+filename})
+    return Response('Moved Temporarily', 301,
+                    headers={'Location': request.url_root+filename})
 
 
 def show(app, request, paste):
+    """Show paste either as nice HTML or, when headless client, as pure text."""
 
     p = join(app.data_dir, paste)
     headless = lambda req: UserAgent(req.environ).browser is None
@@ -106,6 +107,7 @@ def show(app, request, paste):
 
 
 def index(app, request):
+    """Return / -- basic stuff."""
 
     return Response(app.render_template('main.html'), 200, content_type='text/html')
 
@@ -159,18 +161,6 @@ class Pastie:
         response = self.dispatch(request, start_response)
         return response(environ, start_response)
 
-    def clean(self, threshold=1000):
-        '''cleans oldest entries in data_dir if threshold is exceeded'''
-
-        amount = len(listdir(self.data_dir))
-        if amount > threshold:
-            files = (join(self.data_dir, f) for f in listdir(self.data_dir))
-            i = amount - threshold
-            to_be_deleted = sorted([(p, getmtime(p)) for p in files], key=lambda k: k[1])[:i]
-
-            for item in to_be_deleted:
-                remove(item[0])
-
     def __call__(self, environ, start_response):
         return self.wsgi_app(environ, start_response)
 
@@ -187,12 +177,7 @@ application = make_app()
 
 if __name__ == '__main__':
 
-    from werkzeug import SharedDataMiddleware
     from werkzeug.serving import run_simple
 
-    # app = make_app('pastes')
-    # app = SharedDataMiddleware(app, {
-    #      '/static/': join(dirname(__file__), 'static'),
-    # })
     app = make_app()
     run_simple('127.0.0.1', 8080, app, use_reloader=True)
