@@ -8,11 +8,12 @@
 # days just set up a cron like ``find . -type f -mtime +30 -exec rm "{}" \;``.
 
 import io
+import random
 
-from os import makedirs, urandom
+from os import makedirs
 from os.path import join, dirname, exists
 
-from string import ascii_letters, digits
+from string import ascii_lowercase, digits
 from HTMLParser import HTMLParser
 
 from werkzeug.wrappers import Request, Response
@@ -24,27 +25,21 @@ from werkzeug.useragents import UserAgent
 from jinja2 import Environment, FileSystemLoader
 
 
-def hash(length):
-    """generates a pseudo secure 8 chars long hash using /dev/random"""
 
-    h = []
-    for char in urandom(32).encode('base64'):
-        if char in ascii_letters + digits:
-            h.append(char)
-        if len(h) >= length:
-            break
-    return ''.join(h)
+def hashgen(length=8, charset=ascii_lowercase+digits):
+    """generates a pseudorandom string of a-z0-9 of given length"""
+    return ''.join([random.choice(charset) for x in xrange(length)])
 
 
 class Strip(HTMLParser):
     """Try to return the original code."""
 
+    inside = False
+    code = []
+
     def __init__(self, html):
         HTMLParser.__init__(self)
 
-        self.inside = False
-
-        self.code = []
         self.feed(html)
 
     def handle_starttag(self, tag, attrs):
@@ -56,7 +51,6 @@ class Strip(HTMLParser):
             self.inside = False
 
     def handle_data(self, data):
-
         if self.inside:
             self.code.append(data)
 
@@ -64,7 +58,6 @@ class Strip(HTMLParser):
         self.code.append(self.unescape('&' + name + ';'))
 
     def handle_charref(self, char):
-        """An escaped umlaut like ``"&auml;"``"""
         self.code.append(self.unescape('&#' + char + ';'))
 
 
@@ -72,29 +65,43 @@ def create(app, request):
     """Create a new snippet: extract from fields (XXX linenos), render
     ``snippet.html`` and save it to data_dir."""
 
-    filename = hash(length=8)
+    # filename = hashgen(length=8)
+
+    retry_count = 3
+    short_id_length = 3
+
+    while True:
+        pasteid = hashgen(short_id_length)
+
+        if exists(join(app.data_dir, pasteid)):
+            retry_count += 1
+            if retry_count > 3:
+                short_id_length += 1
+                retry_count = 1
+        else:
+            break
 
     text = request.form.get('code', request.files.get('file', '')).rstrip()
     lang = request.form.get('lang', 'text')
     linenos = request.form.get('linenos', False)
 
-    with io.open(join(app.data_dir, filename), 'w') as fp:
+    with io.open(join(app.data_dir, pasteid), 'w') as fp:
 
         fp.write(app.render_template('paste.html',
             lang=(None if lang == 'guess' else lang),
-            hash=filename,
+            hash=pasteid,
             linenos=(True if linenos == 'on' else False),
             paste=text)
         )
 
     return Response('Moved Temporarily', 301,
-                    headers={'Location': request.url_root+filename})
+                    headers={'Location': request.url_root+pasteid})
 
 
-def show(app, request, paste):
-    """Show paste either as nice HTML or, when headless client, as pure text."""
+def show(app, request, pasteid):
+    """Show pasteid either as nice HTML or, when headless client, as pure text."""
 
-    p = join(app.data_dir, paste)
+    p = join(app.data_dir, pasteid)
     headless = lambda req: UserAgent(req.environ).browser is None
     source = lambda html: ''.join(Strip(html).code)
 
@@ -115,7 +122,7 @@ def index(app, request):
 urlmap = Map([
     Rule('/', endpoint=index, methods=['GET', ]),
     Rule('/', endpoint=create, methods=['POST', ]),
-    Rule('/<string(length=8):paste>', endpoint=show, methods=['GET', ]),
+    Rule('/<string(minlength=3):pasteid>', endpoint=show, methods=['GET', ]),
 ])
 
 
