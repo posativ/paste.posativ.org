@@ -26,8 +26,14 @@ body {
     border: 1px solid #A9B6B9;
 }
 
-div.footer {
-    clear: both;
+footer {
+    float: right;
+
+    margin-right: 20px;
+    margin-top: -26px;
+    padding-right: 10px;
+
+    font-size: 13px;
 }
 
 h1 {
