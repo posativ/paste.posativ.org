@@ -1,5 +1,5 @@
-Pastebin -- a LodgeIt™ clone*
-=============================
+Pastebin – a LodgeIt™ clone*
+============================
 
 \* without the good parts
 
@@ -24,4 +24,5 @@ case $1 in
        ;;
 stop)  start-stop-daemon --stop --pidfile /var/run/$NAME.pid
        ;;
-esac```
+esac
+```
