@@ -5,7 +5,7 @@
 # License: BSD revised
 #
 # A simple Pastebin using werkzeug and Jinja2. To delete pastes older than 30
-# days just set up a cron like ``find . -type f -mtime +30 -exec rm "{}" \;``.
+# days just set up a cron like ``find /path/ -type f -mtime +30 -exec rm "{}" \;``.
 
 import io
 import random
@@ -23,7 +23,6 @@ from werkzeug.wsgi import SharedDataMiddleware
 from werkzeug.useragents import UserAgent
 
 from jinja2 import Environment, FileSystemLoader
-
 
 
 def hashgen(length=8, charset=ascii_lowercase+digits):
@@ -64,8 +63,6 @@ class Strip(HTMLParser):
 def create(app, request):
     """Create a new snippet: extract from fields (XXX linenos), render
     ``layouts/show.html`` and save it to data_dir."""
-
-    # filename = hashgen(length=8)
 
     retry_count = 3
     short_id_length = 3
