@@ -24,7 +24,7 @@
                     <option value="guess">Automatically</option>
                     <option value="no-highlight">None</option>
                     {%- for lang in languages.split() %}
-                    <option value="{{ lang.lower() }}">{{ lang }}</option>
+                    <option value="{{ lang }}">{{ lang }}</option>
                     {%- endfor %}
                 </select>
                 <input type="submit" value="Paste!" />
