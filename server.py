@@ -82,6 +82,9 @@ def create(app, request):
     lang = request.form.get('lang', 'text')
     linenos = request.form.get('linenos', False)
 
+    if any(filter(lambda k: request.form.get(k) == 'on', ['human', 'tos'])):
+        return Response('Moved Temporarily', 301, headers={'Location': '/dev/null'})
+
     with io.open(join(app.data_dir, pasteid), 'w') as fp:
 
         fp.write(app.render_template('layouts/show.html',

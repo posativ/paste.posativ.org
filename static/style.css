@@ -10,6 +10,11 @@ body {
     font-size: 14px;
 }
 
+#human, #tos {
+    visibility: hidden;
+    display: none;
+}
+
 #hilite {
     background: #FFF;
     padding-left: 16px;
