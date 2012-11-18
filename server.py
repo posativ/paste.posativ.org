@@ -33,12 +33,12 @@ def hashgen(length=8, charset=ascii_lowercase+digits):
 class Strip(HTMLParser):
     """Try to return the original code."""
 
-    inside = False
-    code = []
-
     def __init__(self, html):
-        HTMLParser.__init__(self)
 
+        self.inside = False
+        self.code = []
+
+        HTMLParser.__init__(self)
         self.feed(html)
 
     def handle_starttag(self, tag, attrs):
