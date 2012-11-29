@@ -8,7 +8,7 @@ highlighting is done via [highlight.js][1]. Every paste is saved as static
 HTML and can served without this application. If you connect to a paste with
 a headless client, say `curl` the server rebuilts the original code.
 
-    $ easy_install jinja2 werkzeug
+    $ easy_install jinja2 werkzeug httpbl
 
 and clone this repository and launch with `python server.py`. To remove pastes
 after a given time, use `cron` (the default location of pastes is `pastes/`:

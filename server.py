@@ -18,10 +18,11 @@ from HTMLParser import HTMLParser
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
-from werkzeug.exceptions import HTTPException, NotFound, InternalServerError
+from werkzeug.exceptions import HTTPException, NotFound, InternalServerError, abort
 from werkzeug.wsgi import SharedDataMiddleware
 from werkzeug.useragents import UserAgent
 
+from httpbl import HttpBL, HARVESTER, COMMENT_SPAMMER
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -63,6 +64,10 @@ class Strip(HTMLParser):
 def create(app, request):
     """Create a new snippet: extract from fields (XXX linenos), render
     ``layouts/show.html`` and save it to data_dir."""
+
+    rv = app.httpbl.query(request.remote_addr)
+    if HARVESTER in rv['type'] or COMMENT_SPAMMER in rv['type']:
+        abort(400)
 
     retry_count = 3
     short_id_length = 3
@@ -131,6 +136,7 @@ class Pastie:
     data_dir = 'pastes/'
     template = 'main.html'
     jinja2 = Environment(loader=FileSystemLoader('.'))
+    httpbl = HttpBL("UR KEY")
 
     def __init__(self, data_dir=None):
 
