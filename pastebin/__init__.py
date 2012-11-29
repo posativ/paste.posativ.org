@@ -13,6 +13,7 @@ import io
 
 from os import makedirs, unlink
 from os.path import join, dirname, isfile, isdir
+from optparse import OptionParser, make_option, SUPPRESS_HELP
 
 from werkzeug.wsgi import SharedDataMiddleware
 from werkzeug.routing import Map, Rule
@@ -171,8 +172,22 @@ class Pastie:
 
 def main():
 
-    app = SharedDataMiddleware(Pastie(), {
+    options = [
+        make_option("--data-dir", dest="data_dir", default="pastes/",
+                    help="paste directory"),
+        make_option("--port", dest="port", default=8080, type=int,
+                    help="port to serve on"),
+        make_option("--use-reloader", action="store_true", dest="reloader",
+                    help=SUPPRESS_HELP, default=False),
+        make_option("--version", action="store_true", dest="version",
+                    help=SUPPRESS_HELP, default=False),
+    ]
+
+    parser = OptionParser(option_list=options)
+    (options, args) = parser.parse_args()
+
+    app = SharedDataMiddleware(Pastie(options.data_dir), {
          '/static/': join(dirname(__file__), '../static/')
     })
 
-    run_simple('127.0.0.1', 8080, app, use_reloader=True)
+    run_simple('127.0.0.1', options.port, app, use_reloader=options.reloader)

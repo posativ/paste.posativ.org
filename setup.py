@@ -10,7 +10,7 @@ version = re.search("__version__ = '([^']+)'",
                     open('pastebin/__init__.py').read()).group(1)
 
 setup(
-    name='weave-minimal',
+    name='pastebin',
     version=version,
     author='posativ',
     author_email='info@posativ.org',
