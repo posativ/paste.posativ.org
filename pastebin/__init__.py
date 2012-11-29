@@ -66,7 +66,7 @@ def create(app, request):
             hash=pasteid,
             linenos=(True if linenos == 'on' else False),
             paste=text,
-            url=request.url_root+pasteid
+            url=app.host+pasteid
         ))
 
     response = Response('Moved Temporarily', 301, headers={'Location': request.url_root+pasteid})
@@ -125,7 +125,7 @@ class Pastie:
     SECRET_KEY = '\x85\xe1Pc\x11n\xe0\xc76\xa1\xd9\x93$\x1ei\x06'
     HTTBL_KEY = 'THIS IS NOT A VALID HTTPBL KEY'
 
-    def __init__(self, data_dir='pastes/'):
+    def __init__(self, data_dir='pastes/', host='http://localhost/'):
 
         self.httpbl = HttpBL(self.HTTBL_KEY)
         self.signer = Signer(self.SECRET_KEY)
@@ -133,6 +133,7 @@ class Pastie:
         self.jinja_env = Environment(loader=FileSystemLoader(
             join(dirname(__file__), 'layouts'))
         )
+        self.host = host
         self.data_dir = data_dir
 
         if not isdir(data_dir):
@@ -177,6 +178,8 @@ def main():
     options = [
         make_option("--data-dir", dest="data_dir", default="pastes/",
                     help="paste directory"),
+        make_option("--host", dest="host", default="http://localhost/",
+                    help="host shown for a paste"),
         make_option("--port", dest="port", default=8080, type=int,
                     help="port to serve on"),
         make_option("--use-reloader", action="store_true", dest="reloader",
@@ -188,7 +191,7 @@ def main():
     parser = OptionParser(option_list=options)
     (options, args) = parser.parse_args()
 
-    app = SharedDataMiddleware(Pastie(options.data_dir), {
+    app = SharedDataMiddleware(Pastie(options.data_dir, options.host), {
          '/static/': join(dirname(__file__), 'static/')
     })
 
