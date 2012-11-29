@@ -38,7 +38,7 @@ def create(app, request):
         abort(400)
 
     retry_count = 3
-    short_id_length = 8
+    short_id_length = 32 if request.form.get('private') else 3
 
     while True:
         pasteid = hashgen(short_id_length)
