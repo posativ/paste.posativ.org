@@ -15,6 +15,7 @@ setup(
     author='posativ',
     author_email='info@posativ.org',
     packages=find_packages(),
+    include_package_data=True,
     zip_safe=True,
     url='https://github.com/posativ/paste.posativ.org/',
     license='BSD revised',
