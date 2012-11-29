@@ -66,7 +66,7 @@ def create(app, request):
     ``layouts/show.html`` and save it to data_dir."""
 
     rv = app.httpbl.query(request.remote_addr)
-    if HARVESTER in rv['type'] or COMMENT_SPAMMER in rv['type']:
+    if any(filter(lambda typ: typ in (rv['type'] or []), [HARVESTER, COMMENT_SPAMMER])):
         abort(400)
 
     retry_count = 3
