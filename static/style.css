@@ -22,22 +22,59 @@ body {
 }
 
 #page {
-    margin: 20px;
     padding: 10px;
+    margin: 20px;
+    border: 1px solid #A9B6B9;
     background: white repeat-x;
     background-image:url('background.png');
     background-repeat:repeat-x;
     background-attachment:fixed;
+}
+
+#head {
+    font-size: 60%;
+    /*padding: 4px 5px;*/
+    margin-left: 12px;
+}
+
+#dollar {
+    color: green;
+    font-weight: bold;
+}
+
+#paste {
+    margin: 10px;
+    padding-left: 20px;
     border: 1px solid #A9B6B9;
+    background: white;
+}
+
+#paste td.code {
+    padding-left: 10px;
+}
+
+#paste td.linenos {
+    background-color: #A7BEC4;
+    padding-right: 5px;
+    padding-left: 20px;
+    text-align: right;
+    color: #fff;
+}
+
+#paste.nolinenos td.linenos {
+    display: none;
+}
+
+#paste pre {
+    font-family: 'Bitstream Vera Sans Mono', monospace;
+    font-size: 13px;
 }
 
 footer {
+
     float: right;
-
     margin-right: 20px;
-    margin-top: -26px;
     padding-right: 10px;
-
     font-size: 13px;
 }
 
@@ -132,46 +169,6 @@ div.text {
 #languages li.active img {
     border: 1px solid #A7BEC4;
     padding: 1px;
-}
-
-#paste {
-    margin: 0;
-    padding: 0;
-    border: 1px solid #A7BEC4;
-}
-
-#paste div.code {
-    overflow: auto;
-}
-
-#paste table, #paste tbody {
-    margin: 0;
-    padding: 0;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-#paste td.code {
-    padding-left: 10px;
-}
-
-#paste td.linenos {
-    background-color: #A7BEC4;
-    padding-right: 5px;
-    padding-left: 20px;
-    text-align: right;
-    color: #fff;
-}
-
-#paste.nolinenos td.linenos {
-    display: none;
-}
-
-#paste pre {
-    margin: 0;
-    padding: 5px 0 5px 0;
-    font-family: 'Bitstream Vera Sans Mono', monospace;
-    font-size: 13px;
 }
 
 input, select, textarea {
