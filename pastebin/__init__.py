@@ -125,12 +125,14 @@ class Pastie:
     SECRET_KEY = '\x85\xe1Pc\x11n\xe0\xc76\xa1\xd9\x93$\x1ei\x06'
     HTTBL_KEY = 'THIS IS NOT A VALID HTTPBL KEY'
 
-    def __init__(self, data_dir='pastes/', layout_dir='layouts/'):
+    def __init__(self, data_dir='pastes/'):
 
         self.httpbl = HttpBL(self.HTTBL_KEY)
         self.signer = Signer(self.SECRET_KEY)
 
-        self.jinja_env = Environment(loader=FileSystemLoader(layout_dir))
+        self.jinja_env = Environment(loader=FileSystemLoader(
+            join(dirname(__file__), 'layouts'))
+        )
         self.data_dir = data_dir
 
         if not isdir(data_dir):
@@ -187,7 +189,7 @@ def main():
     (options, args) = parser.parse_args()
 
     app = SharedDataMiddleware(Pastie(options.data_dir), {
-         '/static/': join(dirname(__file__), '../static/')
+         '/static/': join(dirname(__file__), 'static/')
     })
 
     run_simple('127.0.0.1', options.port, app, use_reloader=options.reloader)
