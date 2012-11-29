@@ -1,2 +1,2 @@
-recursive-include static *
-recursive-include layouts *
+recursive-include pastebin/static *
+recursive-include pastebin/layouts *
