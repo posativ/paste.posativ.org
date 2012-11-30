@@ -34,7 +34,7 @@ def create(app, request):
     """Create a new snippet: extract from fields (XXX linenos), render
     ``layouts/show.html`` and save it to data_dir."""
 
-    rv = app.httpbl.query(request.remote_addr)
+    rv = app.httpbl.query(request.environ.get("HTTP_X_REAL_IP", request.remote_addr))
     if any(filter(lambda typ: typ in (rv['type'] or []), [HARVESTER, COMMENT_SPAMMER])):
         abort(400)
 
