@@ -9,6 +9,9 @@
 
 __version__ = '0.1'
 
+import sys; reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import io
 
 from os import makedirs, unlink
